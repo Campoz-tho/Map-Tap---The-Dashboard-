@@ -50,6 +50,20 @@ function renderKpis() {
     <div class="card kpi"><div class="label">${t.label}</div><div class="value">${esc(t.value)}</div><div class="sub">${esc(t.sub)}</div></div>`).join('');
 }
 
+function renderWins() {
+  const max = Math.max(1, ...stats.table.map((r) => r.wins));
+  $('#wins').innerHTML = `
+    <div class="kpi"><div class="label">Dagwinsten</div></div>
+    <div class="wins-list">${stats.table.map((r, i) => `
+      <div class="wins-row" title="${esc(r.player)}: ${r.wins} van ${r.played} gespeelde dagen gewonnen">
+        <span class="pos">${i + 1}</span>
+        <span class="name"><i class="dot" style="background:${colorOf(r.player)}"></i>${esc(r.player)}</span>
+        <span class="bar"><i style="width:${(r.wins / max) * 100}%"></i></span>
+        <b>${r.wins}</b>
+      </div>`).join('')}
+    </div>`;
+}
+
 function renderDay() {
   const el = $('#day');
   if (!stats.days.length) { el.innerHTML = '<div class="empty">Nog geen resultaten.</div>'; return; }
@@ -262,7 +276,7 @@ async function main() {
   stats = computeStats(data);
   colorOf = (p) => `var(--s${(data.players.indexOf(p) % 6) + 1})`;
   dayIndex = stats.days.length - 1;
-  renderHeader(); renderKpis(); renderDay(); renderStandings(); renderTrend(); renderHeat(); renderLocations(); renderArchive();
+  renderHeader(); renderKpis(); renderWins(); renderDay(); renderStandings(); renderTrend(); renderHeat(); renderLocations(); renderArchive();
   bindTabs('trend-tabs', (m) => { trendMode = m; renderTrend(); });
   bindTabs('heat-tabs', (m) => { heatMode = m; renderHeat(); });
   let w = innerWidth;
