@@ -1,0 +1,92 @@
+{
+  "me": "Thomas",
+  "players": [
+    "Thomas",
+    "Guust",
+    "Rembert",
+    "Frédéric",
+    "Felix",
+    "Wout"
+  ],
+  "days": [
+    {
+      "date": "2026-11-04",
+      "locations": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "results": [
+        {
+          "player": "Guust",
+          "rounds": [
+            97,
+            100,
+            100,
+            83,
+            97
+          ],
+          "total": 937
+        },
+        {
+          "player": "Rembert",
+          "rounds": [
+            97,
+            85,
+            100,
+            97,
+            86
+          ],
+          "total": 931
+        },
+        {
+          "player": "Frédéric",
+          "rounds": [
+            97,
+            100,
+            99,
+            95,
+            89
+          ],
+          "total": 947
+        },
+        {
+          "player": "Felix",
+          "rounds": [
+            98,
+            100,
+            92,
+            97,
+            80
+          ],
+          "total": 913
+        },
+        {
+          "player": "Thomas",
+          "rounds": [
+            97,
+            88,
+            95,
+            95,
+            92
+          ],
+          "total": 936
+        },
+        {
+          "player": "Wout",
+          "rounds": [
+            94,
+            82,
+            95,
+            90,
+            80
+          ],
+          "total": 876
+        }
+      ],
+      "chat": []
+    }
+  ]
+}

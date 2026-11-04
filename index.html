@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MapTap Scorebord</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div>
+        <h1>🎯 MapTap Scorebord</h1>
+        <p id="subtitle">Laden…</p>
+      </div>
+      <div class="top-actions" id="admin-link" hidden>
+        <a class="btn" href="beheer.html">✏️ Scores invoeren</a>
+      </div>
+    </header>
+
+    <div class="kpis" id="kpis"></div>
+
+    <section>
+      <h2>Dagresultaat</h2>
+      <div class="card" id="day"></div>
+    </section>
+
+    <section>
+      <h2>Klassement</h2>
+      <div class="card table-wrap" id="standings"></div>
+    </section>
+
+    <section>
+      <h2>Verloop</h2>
+      <div class="card">
+        <div class="tabs" role="tablist" id="trend-tabs">
+          <button role="tab" aria-selected="true" data-mode="score">Score per dag</button>
+          <button role="tab" aria-selected="false" data-mode="wins">Wins opgeteld</button>
+        </div>
+        <div class="legend" id="trend-legend"></div>
+        <div class="chart" id="trend"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Rondes &amp; locaties</h2>
+      <div class="grid2">
+        <div class="card">
+          <div class="tabs" role="tablist" id="heat-tabs">
+            <button role="tab" aria-selected="true" data-mode="avg">Gemiddelde score</button>
+            <button role="tab" aria-selected="false" data-mode="lost">Punten verloren</button>
+          </div>
+          <div id="heat"></div>
+        </div>
+        <div class="card">
+          <div class="small muted" style="margin-bottom:6px">Moeilijkste locaties (laagste groepsgemiddelde)</div>
+          <div id="locations"></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Archief</h2>
+      <div class="card list" id="archive"></div>
+    </section>
+  </div>
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>

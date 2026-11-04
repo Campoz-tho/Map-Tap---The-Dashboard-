@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MapTap Beheer</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✏️</text></svg>">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    textarea, input[type=text], input[type=date], select {
+      font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 6px 8px; width: 100%;
+    }
+    textarea { min-height: 180px; resize: vertical; font-size: 13px; }
+    .locs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 8px 0 12px; }
+    .locs label { font-size: 12px; color: var(--muted); display: grid; gap: 2px; }
+    @media (max-width: 640px) { .locs { grid-template-columns: 1fr 1fr; } }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+    .warn { color: #d03b3b; font-size: 12px; }
+    .note { font-size: 12px; color: var(--muted); }
+    td select { width: auto; min-width: 110px; padding: 3px 6px; }
+    pre.log { background: var(--surface-2); border-radius: 8px; padding: 10px; font-size: 12px; white-space: pre-wrap; max-height: 260px; overflow: auto; }
+    .msgrow { display: flex; gap: 8px; align-items: baseline; font-size: 14px; padding: 2px 0; }
+    .msgrow b { min-width: 80px; }
+    .status { font-size: 14px; }
+    .date-card + .date-card { margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div>
+        <h1>✏️ Scores invoeren</h1>
+        <p>Plak de Messenger-berichten, controleer, sla op en publiceer.</p>
+      </div>
+      <div class="top-actions"><a class="btn" href="index.html">📊 Naar scorebord</a></div>
+    </header>
+
+    <div class="card">
+      <label class="small muted" for="paste">Chat van de dag (mag ook meerdere dagen tegelijk)</label>
+      <textarea id="paste" placeholder="Selecteer de berichten in Messenger, kopieer en plak hier…"></textarea>
+      <div class="actions">
+        <button class="primary" id="analyse">Analyseren</button>
+        <span class="note">Er wordt nog niets opgeslagen.</span>
+      </div>
+    </div>
+
+    <div id="preview"></div>
+
+    <section>
+      <h2>Bestaande dag aanpassen</h2>
+      <div class="card">
+        <select id="edit-date"></select>
+        <div id="edit"></div>
+      </div>
+    </section>
+
+    <section id="publish-box">
+      <h2>Publiceren</h2>
+      <div class="card">
+        <div class="status" id="save-status">Nog geen wijzigingen.</div>
+        <div class="actions">
+          <button class="primary" id="publish">🚀 Publiceren naar GitHub</button>
+          <span class="note">Zet data/scores.json online (git commit + push).</span>
+        </div>
+        <pre class="log" id="log" hidden></pre>
+      </div>
+    </section>
+  </div>
+  <script type="module" src="assets/beheer.js"></script>
+</body>
+</html>
