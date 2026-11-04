@@ -48,7 +48,7 @@ body {
 }
 .wrap { max-width: 1040px; margin: 0 auto; padding: 24px 16px 64px; }
 
-header.top { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+header.top { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
 header.top h1 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
 header.top p { margin: 2px 0 0; color: var(--text-2); }
 .top-actions { display: flex; gap: 8px; }
