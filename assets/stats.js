@@ -46,7 +46,11 @@ export function computeStats(data) {
     }
     const roundAvg = [0, 1, 2, 3, 4].map((i) => avg(day.results.map((r) => r.rounds[i])));
     const margin = ranked.length > 1 && winners.length === 1 ? ranked[0].total - ranked[1].total : 0;
-    return { ...day, ranked, winners, roundAvg, margin, missing: players.filter((p) => !day.results.some((r) => r.player === p)) };
+    return {
+      ...day, ranked, winners, roundAvg, margin,
+      locations: data.locations?.[day.date] ?? [],
+      missing: players.filter((p) => !day.results.some((r) => r.player === p)),
+    };
   });
 
   const table = players.map((p) => {

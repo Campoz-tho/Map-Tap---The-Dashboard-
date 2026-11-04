@@ -8,16 +8,18 @@
     "Felix",
     "Wout"
   ],
+  "locations": {
+    "2026-11-04": [
+      "Berlin, Germany",
+      "Singapore",
+      "Linz, Austria",
+      "Takasaki, Japan",
+      "Minot, North Dakota, USA"
+    ]
+  },
   "days": [
     {
       "date": "2026-11-04",
-      "locations": [
-        "",
-        "",
-        "",
-        "",
-        ""
-      ],
       "results": [
         {
           "player": "Guust",

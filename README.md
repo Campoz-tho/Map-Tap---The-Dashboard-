@@ -7,7 +7,9 @@ Dagelijks scorebord voor onze MapTap-groep (Thomas, Guust, Rembert, Frédéric, 
 1. Dubbelklik **`Beheer starten.cmd`**. De invoerpagina opent op http://localhost:8080/beheer.html.
 2. Kopieer de berichten uit de Messenger-groep en plak ze in het vak. Klik op **Analyseren**.
 3. Controleer de spelers, vul eventueel de 5 locaties in en vink chatberichten af die niet online mogen.
-4. Klik op **Opslaan** en daarna op **Publiceren**. De site is binnen ongeveer een minuut bijgewerkt.
+4. Klik op **Opslaan**.
+5. Locaties: download op maptap.gg/profile → *Your data* de CSV-export, kies dat bestand bij **Locaties uit MapTap-export** en klik op **Locaties inlezen**.
+6. Klik op **Publiceren**. De site is binnen ongeveer een minuut bijgewerkt.
 
 Alle data staat in `data/scores.json`.
 

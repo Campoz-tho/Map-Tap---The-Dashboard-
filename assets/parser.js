@@ -65,6 +65,44 @@ function parseRounds(line) {
   return rounds.every((v) => v >= 0 && v <= 100) ? rounds : null;
 }
 
+function splitCsvLine(line) {
+  const out = [];
+  let cur = '', quoted = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (quoted) {
+      if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+      else if (c === '"') quoted = false;
+      else cur += c;
+    } else if (c === '"') quoted = true;
+    else if (c === ',') { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out.map((s) => s.trim());
+}
+
+/**
+ * Leest de "Your data"-export van maptap.gg/profile:
+ * datum,totaal,"locatie 1",score 1,,locatie 2,score 2,,…
+ * @returns {{date: string, total: number, locations: string[], rounds: number[]}[]}
+ */
+export function parseExport(text) {
+  const games = [];
+  for (const line of text.split(/\r?\n/)) {
+    const f = splitCsvLine(line);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(f[0])) continue; // kopregel of lege regel
+    const locations = [], rounds = [];
+    for (let i = 2; i + 1 < f.length && locations.length < 5; i += 3) {
+      if (!f[i]) break;
+      locations.push(f[i]);
+      rounds.push(Number(f[i + 1]));
+    }
+    if (locations.length === 5) games.push({ date: f[0], total: Number(f[1]), locations, rounds });
+  }
+  return games;
+}
+
 /**
  * @param {string} text  gekopieerde chat
  * @param {{players: string[], me: string, refDate?: Date}} opts

@@ -55,7 +55,9 @@ function renderDay() {
   if (!stats.days.length) { el.innerHTML = '<div class="empty">Nog geen resultaten.</div>'; return; }
   const d = stats.days[dayIndex];
   const locs = d.locations ?? [];
-  const heads = ROUND_LABELS.map((l, i) => `<div title="${esc(locs[i] || l)}">${locs[i] ? `<span class="loc-head">${esc(locs[i])}</span>` : l}</div>`).join('');
+  const heads = ROUND_LABELS.map((l, i) => `<div title="${esc(locs[i] || l)}">${locs[i]
+    ? `<span class="loc-head">${esc(locs[i].split(',')[0])}</span><br><span class="loc-mult">${l.split(' ')[1]}</span>`
+    : l}</div>`).join('');
   const rows = d.ranked.map((r) => `
     <div class="row${r.isWinner ? ' winner' : ''}">
       <div class="rank">${r.isWinner ? '👑' : r.rank}</div>

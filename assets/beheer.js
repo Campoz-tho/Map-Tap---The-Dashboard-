@@ -1,4 +1,4 @@
-import { parseChat, weightedTotal } from './parser.js';
+import { parseChat, parseExport, weightedTotal } from './parser.js';
 import { ROUND_LABELS } from './stats.js';
 
 const $ = (sel) => document.querySelector(sel);
@@ -26,6 +26,35 @@ async function save(statusText) {
 
 const findDay = (date) => data.days.find((d) => d.date === date);
 
+function setLocations(date, locs) {
+  if (locs.some(Boolean)) data.locations[date] = [...locs];
+  else delete data.locations[date];
+}
+
+/* ---------- MapTap-export (locaties) ---------- */
+
+async function importExport() {
+  const file = $('#export-file').files[0];
+  const text = file ? await file.text() : $('#export-text').value;
+  const games = parseExport(text);
+  if (!games.length) { $('#export-status').textContent = '❌ Geen spellen gevonden in deze export.'; return; }
+  let added = 0;
+  const notes = [];
+  for (const g of games) {
+    const before = (data.locations[g.date] ?? []).join('|');
+    setLocations(g.date, g.locations);
+    if (before !== g.locations.join('|')) added++;
+    // Eigen score aanvullen of controleren voor dagen die al op het scorebord staan.
+    const day = findDay(g.date);
+    if (!day) continue;
+    const mine = day.results.find((r) => r.player === data.me);
+    if (!mine) { day.results.push({ player: data.me, rounds: g.rounds, total: g.total }); notes.push(`score van ${data.me} toegevoegd op ${g.date}`); }
+    else if (mine.total !== g.total) notes.push(`let op: ${g.date} staat ${mine.total} op het scorebord maar ${g.total} in de export`);
+  }
+  $('#export-file').value = ''; $('#export-text').value = '';
+  await save(`Locaties van ${games.length} ${games.length === 1 ? 'dag' : 'dagen'} ingelezen (${added} nieuw of gewijzigd)${notes.length ? ' — ' + notes.join('; ') : ''}`);
+}
+
 /* ---------- Analyseren & voorbeeld ---------- */
 
 function analyse() {
@@ -33,7 +62,7 @@ function analyse() {
   const dates = [...new Set([...results.map((r) => r.date), ...messages.map((m) => m.date)].filter(Boolean))].sort();
   groups = dates.map((date) => ({
     date,
-    locations: [...(findDay(date)?.locations ?? emptyLocs())],
+    locations: [...(data.locations[date] ?? emptyLocs())],
     results: results.filter((r) => r.date === date).map((r) => ({ ...r, include: true })),
     messages: messages.filter((m) => m.date === date).map((m) => ({ ...m, include: true })),
   }));
@@ -96,8 +125,8 @@ async function saveGroups() {
   let count = 0;
   for (const g of groups) {
     let day = findDay(g.date);
-    if (!day) { day = { date: g.date, locations: emptyLocs(), results: [], chat: [] }; data.days.push(day); }
-    day.locations = g.locations;
+    if (!day) { day = { date: g.date, results: [], chat: [] }; data.days.push(day); }
+    setLocations(g.date, g.locations);
     for (const r of g.results.filter((x) => x.include)) {
       if (!data.players.includes(r.player)) data.players.push(r.player);
       day.results = day.results.filter((x) => x.player !== r.player);
@@ -131,9 +160,9 @@ function renderEdit() {
   const day = findDay($('#edit-date').value);
   const el = $('#edit');
   if (!day) { el.innerHTML = ''; return; }
-  day.locations ??= emptyLocs();
+  const locs = [...(data.locations[day.date] ?? emptyLocs())];
   el.innerHTML = `
-    <div class="locs">${day.locations.map((l, li) => `
+    <div class="locs">${locs.map((l, li) => `
       <label>${ROUND_LABELS[li]} — locatie<input type="text" class="eloc" data-l="${li}" value="${esc(l)}" placeholder="bv. Japan"></label>`).join('')}</div>
     <div class="table-wrap"><table>
       <thead><tr><th>Speler</th><th></th>${ROUND_LABELS.map((l) => `<th>${l}</th>`).join('')}<th>Totaal</th><th></th></tr></thead>
@@ -146,7 +175,7 @@ function renderEdit() {
       ${(day.chat ?? []).length ? `<button id="chat-clear">Chat van deze dag wissen (${day.chat.length})</button>` : ''}
       <button id="day-delete">Hele dag verwijderen</button>
     </div>`;
-  el.querySelectorAll('.eloc').forEach((i) => i.oninput = () => { day.locations[i.dataset.l] = i.value.trim(); });
+  el.querySelectorAll('.eloc').forEach((i) => i.oninput = () => { locs[i.dataset.l] = i.value.trim(); setLocations(day.date, locs); });
   el.querySelectorAll('.del').forEach((b) => b.onclick = () => {
     const r = day.results[b.dataset.r];
     if (confirm(`Score van ${r.player} (${r.total}) verwijderen?`)) { day.results.splice(b.dataset.r, 1); save(`Score van ${r.player} verwijderd`); }
@@ -181,7 +210,9 @@ async function main() {
     return;
   }
   await load();
+  data.locations ??= {};
   $('#analyse').onclick = analyse;
+  $('#export-import').onclick = importExport;
   $('#edit-date').onchange = renderEdit;
   $('#publish').onclick = publish;
   renderEditSelect();

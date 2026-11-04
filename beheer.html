@@ -48,6 +48,19 @@
     <div id="preview"></div>
 
     <section>
+      <h2>Locaties uit MapTap-export</h2>
+      <div class="card">
+        <div class="small muted">Download op <a href="https://maptap.gg/profile#gameSettingsSection" target="_blank" rel="noopener">maptap.gg/profile</a> → <i>Your data</i> je export (.csv) en kies het bestand, of plak de regels hieronder. De export bevat al je dagen, dus af en toe downloaden volstaat.</div>
+        <div class="actions"><input type="file" id="export-file" accept=".csv,text/csv,text/plain"></div>
+        <textarea id="export-text" style="min-height:70px;margin-top:8px" placeholder='2026-11-04,936,"Berlin, Germany",97,,Singapore,88,,…'></textarea>
+        <div class="actions">
+          <button class="primary" id="export-import">📍 Locaties inlezen</button>
+          <span class="note" id="export-status">Vult ook jouw eigen score aan als die nog ontbreekt.</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
       <h2>Bestaande dag aanpassen</h2>
       <div class="card">
         <select id="edit-date"></select>
