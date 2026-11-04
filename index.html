@@ -32,6 +32,11 @@
     </section>
 
     <section>
+      <h2>Moeilijkste locaties</h2>
+      <div class="card table-wrap" id="locations"></div>
+    </section>
+
+    <section>
       <h2>Verloop</h2>
       <div class="card">
         <div class="tabs" role="tablist" id="trend-tabs">
@@ -44,19 +49,13 @@
     </section>
 
     <section>
-      <h2>Rondes &amp; locaties</h2>
-      <div class="grid2">
-        <div class="card">
-          <div class="tabs" role="tablist" id="heat-tabs">
-            <button role="tab" aria-selected="true" data-mode="avg">Gemiddelde score</button>
-            <button role="tab" aria-selected="false" data-mode="lost">Punten verloren</button>
-          </div>
-          <div id="heat"></div>
+      <h2>Rondes</h2>
+      <div class="card">
+        <div class="tabs" role="tablist" id="heat-tabs">
+          <button role="tab" aria-selected="true" data-mode="avg">Gemiddelde score</button>
+          <button role="tab" aria-selected="false" data-mode="lost">Punten verloren</button>
         </div>
-        <div class="card">
-          <div class="small muted" style="margin-bottom:6px">Moeilijkste locaties (laagste groepsgemiddelde)</div>
-          <div id="locations"></div>
-        </div>
+        <div id="heat"></div>
       </div>
     </section>
 

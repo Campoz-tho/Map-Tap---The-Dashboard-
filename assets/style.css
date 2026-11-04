@@ -78,9 +78,9 @@ button.primary:hover { filter: brightness(1.08); }
 
 /* KPI's */
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-.kpi .label { font-size: 13px; color: var(--text-2); }
-.kpi .value { font-size: 28px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.2; margin-top: 4px; }
-.kpi .sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.kpi .label { font-size: 13px; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.05em; }
+.kpi .value { font-size: 28px; font-weight: 650; letter-spacing: -0.02em; line-height: 1.2; margin-top: 6px; }
+.kpi .sub { font-size: 14px; color: var(--text-2); margin-top: 2px; }
 
 /* Dagkaart */
 .day-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
@@ -128,6 +128,11 @@ td { border-bottom: 1px solid var(--grid); }
 tr:last-child td { border-bottom: none; }
 th:nth-child(-n+2), td:nth-child(-n+2) { text-align: left; }
 td.player { font-weight: 600; }
+.loc-table th, .loc-table td { text-align: left; vertical-align: middle; }
+.loc-table td { white-space: normal; }
+.loc-table td:first-child { min-width: 160px; }
+.loc-table .cell.avg { display: inline-block; min-width: 44px; }
+.loc-table .who { color: var(--text-2); }
 .winbar { display: inline-flex; align-items: center; gap: 8px; }
 .winbar i { display: inline-block; height: 8px; border-radius: 4px; background: var(--gold); min-width: 2px; }
 

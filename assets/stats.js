@@ -72,9 +72,15 @@ export function computeStats(data) {
   const biggest = decided.reduce((m, d) => (!m || d.margin > m.margin ? d : m), null);
 
   // Moeilijkste locaties (alleen als er namen zijn ingevuld).
+  const extreme = (results, i, pick) => {
+    if (!results.length) return null;
+    const score = pick(...results.map((r) => r.rounds[i]));
+    return { score, players: results.filter((r) => r.rounds[i] === score).map((r) => r.player) };
+  };
   const locations = dayInfo.flatMap((d) => (d.locations ?? []).map((name, i) => ({
     name, date: d.date, round: i, avg: d.roundAvg[i],
-    best: d.results.reduce((m, r) => (!m || r.rounds[i] > m.score ? { player: r.player, score: r.rounds[i] } : m), null),
+    best: extreme(d.results, i, Math.max),
+    worst: extreme(d.results, i, Math.min),
   }))).filter((l) => l.name && l.avg !== null);
 
   const groupRoundAvg = [0, 1, 2, 3, 4].map((i) => avg(all.map((r) => r.rounds[i])));

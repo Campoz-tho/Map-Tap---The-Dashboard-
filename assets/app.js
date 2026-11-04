@@ -218,14 +218,23 @@ function renderHeat() {
 
 function renderLocations() {
   const el = $('#locations');
-  const locs = [...stats.locations].sort((a, b) => a.avg - b.avg).slice(0, 8);
+  const locs = [...stats.locations].sort((a, b) => a.avg - b.avg).slice(0, 10);
   if (!locs.length) {
     el.innerHTML = '<div class="empty">Nog geen locatienamen ingevuld. Vul ze in bij het invoeren van een dag, dan verschijnen hier de lastigste plekken.</div>';
     return;
   }
-  el.innerHTML = locs.map((l) => `
-    <div class="li"><span><b>${esc(l.name)}</b> <span class="muted small">${shortDate(l.date)} · ${ROUND_LABELS[l.round]}</span></span>
-    <span class="num">gem. ${fmt(l.avg, 0)} <span class="muted small">· top ${esc(l.best.player)} ${l.best.score}</span></span></div>`).join('');
+  const who = (x) => `<span class="who">${esc(x.players.join(', '))}</span> <b>${x.score}</b>`;
+  el.innerHTML = `
+    <table class="loc-table">
+      <thead><tr><th>Locatie</th><th>Gemiddelde</th><th>Top</th><th>Laagste</th></tr></thead>
+      <tbody>${locs.map((l) => `
+        <tr>
+          <td><b>${esc(l.name)}</b><div class="small muted">${shortDate(l.date)} · ${ROUND_LABELS[l.round]}</div></td>
+          <td><span class="cell avg" style="${cellStyle(scoreT(l.avg))}">${fmt(l.avg, 0)}</span></td>
+          <td>${who(l.best)}</td>
+          <td>${who(l.worst)}</td>
+        </tr>`).join('')}</tbody>
+    </table>`;
 }
 
 function renderArchive() {
