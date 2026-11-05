@@ -33,12 +33,63 @@ function setLocations(date, locs) {
 
 /* ---------- MapTap-export (locaties) ---------- */
 
-async function importExport() {
+let pendingLocs = []; // ingelezen locaties die nog bevestigd moeten worden
+
+const todayIso = () => new Date().toLocaleDateString('sv-SE');
+
+async function readLocations() {
   const file = $('#export-file').files[0];
   const text = file ? await file.text() : $('#export-text').value;
   let games = parseExport(text);
   if (!games.length) games = parseMail(text);
-  if (!games.length) { $('#export-status').textContent = '❌ Geen locaties gevonden. Plak de volledige MapTap-mail of de CSV-export.'; return; }
+  if (!games.length) {
+    $('#export-status').innerHTML = '❌ Geen locaties gevonden. Er staat geen enkele regel als <i>"Round 1 · Nantes, France"</i> in de geplakte tekst. ' +
+      'Open de mail, selecteer de tekst van <i>"Today on MapTap"</i> tot <i>"See you tomorrow"</i> en plak opnieuw.';
+    return;
+  }
+  pendingLocs = games.map((g) => ({ ...g, date: g.date ?? todayIso(), dateGuessed: !g.date, locations: [...g.locations] }));
+  $('#export-status').textContent = '';
+  renderLocPreview();
+}
+
+function renderLocPreview() {
+  const el = $('#loc-preview');
+  if (!pendingLocs.length) { el.innerHTML = ''; return; }
+  const many = pendingLocs.length > 3;
+  const body = many
+    ? `<div class="table-wrap"><table class="loc-table">
+        <thead><tr><th>Datum</th>${ROUND_LABELS.map((l) => `<th>${l}</th>`).join('')}</tr></thead>
+        <tbody>${pendingLocs.map((g) => `<tr><td>${g.date}</td>${g.locations.map((l) => `<td>${esc(l)}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table></div>`
+    : pendingLocs.map((g, gi) => {
+      const missing = g.locations.filter((l) => !l).length;
+      return `<div style="margin-top:12px">
+        <label class="small muted">Datum<input type="date" class="pl-date" data-g="${gi}" value="${g.date}" style="max-width:180px;display:block"></label>
+        ${g.dateGuessed ? '<div class="warn">⚠ Geen datum gevonden in de mail — vandaag ingevuld, controleer dit.</div>' : ''}
+        ${findDay(g.date) ? '' : '<div class="note">Deze dag staat nog niet op het scorebord; de locaties worden bewaard tot je de chat inleest.</div>'}
+        <div class="locs">${g.locations.map((l, li) => `
+          <label>${ROUND_LABELS[li]} — locatie<input type="text" class="pl-loc" data-g="${gi}" data-l="${li}" value="${esc(l)}"></label>`).join('')}</div>
+        ${missing ? `<div class="warn">⚠ ${missing} ${missing === 1 ? 'locatie' : 'locaties'} niet gevonden — vul zelf aan.</div>` : ''}
+        ${g.rounds ? `<div class="note">Jouw score in de mail: ${g.rounds.join(' · ')} = <b>${g.total}</b> (wordt toegevoegd als die nog ontbreekt).</div>` : ''}
+      </div>`;
+    }).join('');
+  el.innerHTML = `
+    <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
+      <b>Controleer de locaties</b> <span class="note">(${pendingLocs.length} ${pendingLocs.length === 1 ? 'dag' : 'dagen'})</span>
+      ${body}
+      <div class="actions">
+        <button class="primary" id="loc-confirm">✅ Bevestigen en opslaan</button>
+        <button id="loc-cancel">Annuleren</button>
+      </div>
+    </div>`;
+  el.querySelectorAll('.pl-date').forEach((i) => i.onchange = () => { pendingLocs[i.dataset.g].date = i.value; pendingLocs[i.dataset.g].dateGuessed = false; renderLocPreview(); });
+  el.querySelectorAll('.pl-loc').forEach((i) => i.oninput = () => { pendingLocs[i.dataset.g].locations[i.dataset.l] = i.value.trim(); });
+  $('#loc-confirm').onclick = confirmLocations;
+  $('#loc-cancel').onclick = () => { pendingLocs = []; renderLocPreview(); };
+}
+
+async function confirmLocations() {
+  const games = pendingLocs.filter((g) => g.date);
   let added = 0;
   const notes = [];
   for (const g of games) {
@@ -53,6 +104,8 @@ async function importExport() {
     else if (mine.total !== g.total) notes.push(`let op: ${g.date} staat ${mine.total} op het scorebord maar ${g.total} in de export`);
   }
   $('#export-file').value = ''; $('#export-text').value = '';
+  pendingLocs = []; renderLocPreview();
+  $('#export-status').textContent = '✅ Locaties opgeslagen.';
   await save(`Locaties van ${games.length} ${games.length === 1 ? 'dag' : 'dagen'} ingelezen (${added} nieuw of gewijzigd)${notes.length ? ' — ' + notes.join('; ') : ''}`);
 }
 
@@ -213,7 +266,7 @@ async function main() {
   await load();
   data.locations ??= {};
   $('#analyse').onclick = analyse;
-  $('#export-import').onclick = importExport;
+  $('#export-import').onclick = readLocations;
   $('#edit-date').onchange = renderEdit;
   $('#publish').onclick = publish;
   renderEditSelect();

@@ -103,35 +103,50 @@ export function parseExport(text) {
   return games;
 }
 
-const MAIL_ROUND = /^round\s*([1-5])\s*[·•:\-–]\s*(.+)$/i;
-const MAIL_DATE = new RegExp(`\\b(${Object.keys(MONTHS).join('|')})\\s+(\\d{1,2})\\b`, 'i');
+// "Round 1 · Nantes, France" (scheidingsteken mag van alles zijn; locatie mag ook op de volgende regel staan)
+const MAIL_ROUND = /^round\s*([1-5])\b[^\p{L}\p{N}]*(.*)$/iu;
+const MONTH_RE = Object.keys(MONTHS).join('|');
+const MAIL_DATE_WEEKDAY = new RegExp(`(?:mon|tues|wednes|thurs|fri|satur|sun)day,?\\s+(${MONTH_RE})\\.?\\s+(\\d{1,2})\\b`, 'i');
+const MAIL_DATE = new RegExp(`\\b(${MONTH_RE})\\.?\\s+(\\d{1,2})\\b`, 'i');
 
 /**
  * Leest de dagelijkse "Today on MapTap"-mail: datum, de 5 locaties en (indien aanwezig) je eigen score.
- * @returns {{date: string, total: number|null, locations: string[], rounds: number[]|null}[]}
+ * Geeft ook een gedeeltelijk resultaat terug, zodat het in het controlescherm aangevuld kan worden.
+ * @returns {{date: string|null, total: number|null, locations: string[], rounds: number[]|null}[]}
  */
 export function parseMail(text, refDate = new Date()) {
-  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-  const dateLine = lines.find((l) => MAIL_DATE.test(l) && !MAIL_ROUND.test(l));
-  if (!dateLine) return [];
-  const [, month, day] = dateLine.match(MAIL_DATE);
-  const date = toIsoDate(MONTHS[month.toLowerCase()], Number(day), refDate);
+  const lines = text
+    .replace(/[​-‍﻿]/g, '')
+    .replace(/ /g, ' ')
+    .split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
 
-  const locations = [], rounds = [];
-  let total = null;
+  const locations = ['', '', '', '', ''], rounds = [];
+  let total = null, current = -1, firstRoundLine = lines.length;
   lines.forEach((line, i) => {
     const m = line.match(MAIL_ROUND);
-    if (m) { locations[Number(m[1]) - 1] = m[2]; return; }
-    // "91" gevolgd door "your score" → score van de laatst geziene ronde.
-    if (/^your score$/i.test(line) && /^\d{1,3}$/.test(lines[i - 1] ?? '')) {
-      const n = locations.filter(Boolean).length;
-      if (n) rounds[n - 1] = Number(lines[i - 1]);
+    if (m) {
+      current = Number(m[1]) - 1;
+      firstRoundLine = Math.min(firstRoundLine, i);
+      locations[current] = m[2].trim() || (lines[i + 1] ?? '');
+      return;
     }
-    const t = line.match(/^(\d{1,4})\s+your score\b/i);
-    if (t) total = Number(t[1]);
+    // Score als "91" + "your score" op twee regels, of "91 your score …" op één regel.
+    const inline = line.match(/^(\d{1,4})\s+your score\b/i);
+    const split = /^your score\b/i.test(line) && /^\d{1,4}$/.test(lines[i - 1] ?? '') ? Number(lines[i - 1]) : null;
+    const score = inline ? Number(inline[1]) : split;
+    if (score === null) return;
+    if (current < 0) total = score;
+    else if (rounds[current] === undefined && score <= 100) rounds[current] = score;
   });
-  if (locations.filter(Boolean).length !== 5) return [];
-  const hasRounds = rounds.filter((v) => v !== undefined).length === 5;
+  if (!locations.some(Boolean)) return [];
+
+  // Datum: liefst de "Thursday, November 5"-regel vóór de eerste ronde.
+  const head = lines.slice(0, firstRoundLine);
+  const dm = head.map((l) => l.match(MAIL_DATE_WEEKDAY)).find(Boolean)
+    ?? head.map((l) => l.match(MAIL_DATE)).find(Boolean);
+  const date = dm ? toIsoDate(MONTHS[dm[1].toLowerCase()], Number(dm[2]), refDate) : null;
+
+  const hasRounds = [0, 1, 2, 3, 4].every((i) => rounds[i] !== undefined);
   return [{ date, total: hasRounds ? total ?? weightedTotal(rounds) : null, locations, rounds: hasRounds ? rounds : null }];
 }
 
