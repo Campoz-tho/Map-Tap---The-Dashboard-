@@ -134,17 +134,6 @@
           "total": 834
         },
         {
-          "player": "Frédéric",
-          "rounds": [
-            91,
-            95,
-            92,
-            98,
-            83
-          ],
-          "total": 913
-        },
-        {
           "player": "Thomas",
           "rounds": [
             91,
@@ -165,6 +154,17 @@
             78
           ],
           "total": 843
+        },
+        {
+          "player": "Frédéric",
+          "rounds": [
+            98,
+            96,
+            93,
+            98,
+            80
+          ],
+          "total": 914
         }
       ],
       "chat": [
