@@ -91,7 +91,7 @@ button.primary:hover { filter: brightness(1.08); }
 .ranking { display: grid; gap: 6px; }
 .row {
   display: grid;
-  grid-template-columns: 32px minmax(90px, 1fr) repeat(5, minmax(34px, 52px)) 64px;
+  grid-template-columns: 32px minmax(90px, 1fr) repeat(5, minmax(34px, 52px)) 64px 76px;
   gap: 6px; align-items: center;
   padding: 6px 8px; border-radius: 10px;
 }
@@ -108,6 +108,9 @@ button.primary:hover { filter: brightness(1.08); }
   font-variant-numeric: tabular-nums;
 }
 .total { text-align: right; font-weight: 700; font-size: 17px; font-variant-numeric: tabular-nums; }
+.acc { text-align: right; font-size: 15px; font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; align-self: start; padding-top: 3px; }
+.acc.top { color: var(--text); }
+.total { align-self: start; padding-top: 1px; }
 .gap { display: block; font-size: 11px; font-weight: 500; color: var(--muted); }
 .missing { margin-top: 10px; font-size: 13px; color: var(--muted); }
 .loc-head { font-size: 11px; line-height: 1.2; color: var(--text-2); font-weight: 600; }
@@ -179,7 +182,8 @@ td.player { font-weight: 600; }
 .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
 
 @media (max-width: 560px) {
-  .row { grid-template-columns: 22px minmax(60px, 1fr) repeat(5, minmax(28px, 1fr)) 48px; gap: 3px; padding: 6px 4px; }
+  .row { grid-template-columns: 18px minmax(52px, 1fr) repeat(5, minmax(26px, 1fr)) 40px 46px; gap: 3px; padding: 6px 4px; }
+  .acc { font-size: 13px; }
   .cell { font-size: 12px; }
   .total { font-size: 15px; }
   .pname .dot { display: none; }

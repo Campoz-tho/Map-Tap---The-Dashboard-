@@ -58,12 +58,14 @@ function renderDay() {
   const heads = ROUND_LABELS.map((l, i) => `<div title="${esc(locs[i] || l)}">${locs[i]
     ? `<span class="loc-head">${esc(locs[i].split(',')[0])}</span><br><span class="loc-mult">${l.split(' ')[1]}</span>`
     : l}</div>`).join('');
+  const bestAcc = Math.max(...d.ranked.map((r) => r.accuracy));
   const rows = d.ranked.map((r) => `
     <div class="row${r.isWinner ? ' winner' : ''}">
       <div class="rank">${r.isWinner ? '👑' : r.rank}</div>
       <div class="pname"><i class="dot" style="background:${colorOf(r.player)}"></i><span>${esc(r.player)}</span></div>
       ${r.rounds.map((v) => `<div class="cell" style="${cellStyle(scoreT(v))}">${v}</div>`).join('')}
       <div class="total">${r.total}${r.gap ? `<span class="gap">−${r.gap}</span>` : ''}</div>
+      <div class="acc${r.accuracy === bestAcc ? ' top' : ''}" title="Zonder multipliers: (som van de 5 rondes) × 2">${r.accuracy === bestAcc ? '🎯 ' : ''}${r.accuracy}</div>
     </div>`).join('');
   const chat = (d.chat ?? []).length ? `
     <details class="chat"><summary>💬 Chat van de dag (${d.chat.length})</summary>
@@ -79,7 +81,10 @@ function renderDay() {
       </div>
     </div>
     <div class="ranking">
-      <div class="row head"><div></div><div>Speler</div>${heads}<div style="text-align:right">Totaal</div></div>
+      <div class="row head"><div></div><div>Speler</div>${heads}
+        <div style="text-align:right" title="Eindscore mét multipliers">Score<br><span class="loc-mult">op 1000</span></div>
+        <div style="text-align:right" title="Score zónder multipliers: elke locatie telt even zwaar">Accuraat.<br><span class="loc-mult">op 1000</span></div>
+      </div>
       ${rows}
     </div>
     ${d.missing.length ? `<div class="missing">Niet gespeeld: ${esc(d.missing.join(', '))}</div>` : ''}
@@ -110,8 +115,8 @@ function renderStandings() {
     ['Dagwinsten', 'Aantal dagen gewonnen (gedeelde winst telt voor iedereen)'],
     ['Gespeeld', 'Aantal dagen meegespeeld'],
     ['Win %', 'Percentage gespeelde dagen gewonnen'],
-    ['Gem. score<br><span>op 1000</span>', 'Gemiddelde eindscore mét multipliers'],
-    ['Accuraatheid<br><span>op 100</span>', 'Gemiddelde score per locatie zónder multipliers: elke ronde telt even zwaar'],
+    ['Gem. score<br><span>mét multipliers · op 1000</span>', 'Gemiddelde eindscore, zoals MapTap telt (×1 ×1 ×2 ×3 ×3)'],
+    ['Gem. accuraatheid<br><span>zonder multipliers · op 1000</span>', 'Gemiddelde score als elke locatie even zwaar telt: (som van de 5 rondes) × 2'],
     ['Beste score<br><span>op 1000</span>', 'Hoogste eindscore ooit'],
     ['Top 3', 'Aantal keer in de top 3 van de dag'],
     ['Rondes<br><span>op 100</span>', 'Aantal rondes met een perfecte 100'],

@@ -5,13 +5,16 @@ const MULT = [1, 1, 2, 3, 3];
 
 const avg = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
 
+// Accuraatheid: score zónder multipliers, elke locatie telt even zwaar (5 × 100), herschaald naar 1000.
+export const accuracyOf = (rounds) => rounds.reduce((a, b) => a + b, 0) * 2;
+
 export function rankDay(day) {
   const sorted = [...day.results].sort((a, b) => b.total - a.total);
   const best = sorted[0]?.total ?? null;
   let rank = 0, prev = null;
   return sorted.map((r, i) => {
     if (r.total !== prev) { rank = i + 1; prev = r.total; }
-    return { ...r, rank, isWinner: r.total === best, gap: best - r.total };
+    return { ...r, rank, isWinner: r.total === best, gap: best - r.total, accuracy: accuracyOf(r.rounds) };
   });
 }
 
@@ -31,8 +34,7 @@ export function computeStats(data) {
       if (!s) continue;
       s.played++;
       s.totals.push(r.total);
-      // Zonder multipliers: elke locatie telt even zwaar → gemiddelde op 100.
-      s.rawTotals.push(r.rounds.reduce((a, b) => a + b, 0) / 5);
+      s.rawTotals.push(r.accuracy);
       r.rounds.forEach((v, i) => { s.rounds[i].push(v); s.lost[i] += (100 - v) * MULT[i]; });
       s.perfects += r.rounds.filter((v) => v === 100).length;
       if (r.isWinner) s.wins++;
