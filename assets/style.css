@@ -128,6 +128,8 @@ td { border-bottom: 1px solid var(--grid); }
 tr:last-child td { border-bottom: none; }
 th:nth-child(-n+2), td:nth-child(-n+2) { text-align: left; }
 td.player { font-weight: 600; }
+.standings th { vertical-align: bottom; line-height: 1.3; color: var(--text-2); font-size: 12.5px; }
+.standings th span { font-weight: 400; color: var(--muted); font-size: 11px; }
 .loc-table th, .loc-table td { text-align: left; vertical-align: middle; }
 .loc-table td { white-space: normal; }
 .loc-table td:first-child { min-width: 160px; }

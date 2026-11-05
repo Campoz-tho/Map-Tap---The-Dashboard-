@@ -19,7 +19,7 @@ export function computeStats(data) {
   const days = [...data.days].sort((a, b) => a.date.localeCompare(b.date));
   const players = data.players;
   const per = Object.fromEntries(players.map((p) => [p, {
-    player: p, played: 0, wins: 0, podiums: 0, totals: [], rounds: [[], [], [], [], []],
+    player: p, played: 0, wins: 0, podiums: 0, totals: [], rawTotals: [], rounds: [[], [], [], [], []],
     best: null, worst: null, perfects: 0, streak: 0, bestStreak: 0, lost: [0, 0, 0, 0, 0],
   }]));
 
@@ -31,6 +31,8 @@ export function computeStats(data) {
       if (!s) continue;
       s.played++;
       s.totals.push(r.total);
+      // Zonder multipliers: elke locatie telt even zwaar → gemiddelde op 100.
+      s.rawTotals.push(r.rounds.reduce((a, b) => a + b, 0) / 5);
       r.rounds.forEach((v, i) => { s.rounds[i].push(v); s.lost[i] += (100 - v) * MULT[i]; });
       s.perfects += r.rounds.filter((v) => v === 100).length;
       if (r.isWinner) s.wins++;
@@ -58,6 +60,7 @@ export function computeStats(data) {
     return {
       ...s,
       avg: avg(s.totals),
+      rawAvg: avg(s.rawTotals),
       roundAvg: s.rounds.map(avg),
       winRate: s.played ? s.wins / s.played : 0,
       lostAvg: s.lost.map((l) => (s.played ? l / s.played : null)),

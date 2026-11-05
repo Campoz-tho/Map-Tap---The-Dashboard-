@@ -98,14 +98,28 @@ function renderStandings() {
       <td>${r.played}</td>
       <td>${r.played ? fmt(r.winRate * 100) + '%' : '–'}</td>
       <td>${fmt(r.avg, 1)}</td>
+      <td>${fmt(r.rawAvg, 1)}</td>
       <td>${r.best ? r.best.total : '–'}</td>
       <td>${r.podiums}</td>
       <td>${r.perfects}</td>
       <td>${r.bestStreak}</td>
     </tr>`).join('');
+  const head = [
+    ['#', ''],
+    ['Speler', ''],
+    ['Dagwinsten', 'Aantal dagen gewonnen (gedeelde winst telt voor iedereen)'],
+    ['Gespeeld', 'Aantal dagen meegespeeld'],
+    ['Win %', 'Percentage gespeelde dagen gewonnen'],
+    ['Gem. score<br><span>op 1000</span>', 'Gemiddelde eindscore mét multipliers'],
+    ['Accuraatheid<br><span>op 100</span>', 'Gemiddelde score per locatie zónder multipliers: elke ronde telt even zwaar'],
+    ['Beste score<br><span>op 1000</span>', 'Hoogste eindscore ooit'],
+    ['Top 3', 'Aantal keer in de top 3 van de dag'],
+    ['Rondes<br><span>op 100</span>', 'Aantal rondes met een perfecte 100'],
+    ['Langste<br><span>winreeks</span>', 'Meeste dagwinsten op rij'],
+  ];
   $('#standings').innerHTML = `
-    <table>
-      <thead><tr><th>#</th><th>Speler</th><th>Wins</th><th>Gespeeld</th><th>Win%</th><th>Gem.</th><th>Beste</th><th>Podium</th><th title="Aantal rondes met 100 punten">🎯 100's</th><th title="Langste reeks dagwinsten op rij">Reeks</th></tr></thead>
+    <table class="standings">
+      <thead><tr>${head.map(([label, tip]) => `<th${tip ? ` title="${tip}"` : ''}>${label}</th>`).join('')}</tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
 }
