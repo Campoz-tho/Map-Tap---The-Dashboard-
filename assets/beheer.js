@@ -16,11 +16,20 @@ async function load() {
 
 async function save(statusText) {
   data.days.sort((a, b) => a.date.localeCompare(b.date));
-  const res = await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-  const out = await res.json();
+  let out;
+  try {
+    const res = await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    out = await res.json();
+  } catch {
+    out = { ok: false, error: 'de beheer-server draait niet. Start "Beheer starten.cmd" en open de pagina via http://localhost:8080/beheer.html.' };
+  }
   $('#save-status').innerHTML = out.ok
     ? `✅ ${esc(statusText)} — klik op <b>Publiceren</b> om het online te zetten.`
     : `❌ Opslaan mislukt: ${esc(out.error)}`;
+  if (!out.ok) {
+    alert(`Opslaan mislukt: ${out.error}`);
+    throw new Error(out.error); // zodat de geplakte chat blijft staan
+  }
   renderEditSelect();
 }
 
@@ -253,6 +262,8 @@ async function publish() {
     $('#log').hidden = false;
     $('#log').textContent = out.log;
     $('#save-status').innerHTML = out.ok ? '🚀 Gepubliceerd! De site is binnen een minuutje bijgewerkt.' : '❌ Publiceren mislukt — zie log hieronder.';
+  } catch {
+    $('#save-status').innerHTML = '❌ Publiceren mislukt: de beheer-server draait niet. Start <b>Beheer starten.cmd</b> opnieuw.';
   } finally {
     btn.disabled = false; btn.textContent = '🚀 Publiceren naar GitHub';
   }
