@@ -237,7 +237,7 @@ function renderHeat() {
 
 function renderLocations() {
   const el = $('#locations');
-  const locs = [...stats.locations].sort((a, b) => a.avg - b.avg).slice(0, 10);
+  const locs = [...stats.locations].sort((a, b) => a.avg - b.avg).slice(0, 5);
   if (!locs.length) {
     el.innerHTML = '<div class="empty">Nog geen locatienamen ingevuld. Vul ze in bij het invoeren van een dag, dan verschijnen hier de lastigste plekken.</div>';
     return;
