@@ -89,6 +89,61 @@
         }
       ],
       "chat": []
+    },
+    {
+      "date": "2026-11-05",
+      "results": [
+        {
+          "player": "Guust",
+          "rounds": [
+            95,
+            98,
+            95,
+            62,
+            83
+          ],
+          "total": 818
+        },
+        {
+          "player": "Felix",
+          "rounds": [
+            97,
+            98,
+            96,
+            91,
+            85
+          ],
+          "total": 915
+        },
+        {
+          "player": "Rembert",
+          "rounds": [
+            94,
+            95,
+            99,
+            74,
+            75
+          ],
+          "total": 834
+        },
+        {
+          "player": "Frédéric",
+          "rounds": [
+            91,
+            95,
+            92,
+            98,
+            83
+          ],
+          "total": 913
+        }
+      ],
+      "chat": [
+        {
+          "player": "Guust",
+          "text": "auwtch"
+        }
+      ]
     }
   ]
 }
