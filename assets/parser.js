@@ -103,6 +103,38 @@ export function parseExport(text) {
   return games;
 }
 
+const MAIL_ROUND = /^round\s*([1-5])\s*[·•:\-–]\s*(.+)$/i;
+const MAIL_DATE = new RegExp(`\\b(${Object.keys(MONTHS).join('|')})\\s+(\\d{1,2})\\b`, 'i');
+
+/**
+ * Leest de dagelijkse "Today on MapTap"-mail: datum, de 5 locaties en (indien aanwezig) je eigen score.
+ * @returns {{date: string, total: number|null, locations: string[], rounds: number[]|null}[]}
+ */
+export function parseMail(text, refDate = new Date()) {
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const dateLine = lines.find((l) => MAIL_DATE.test(l) && !MAIL_ROUND.test(l));
+  if (!dateLine) return [];
+  const [, month, day] = dateLine.match(MAIL_DATE);
+  const date = toIsoDate(MONTHS[month.toLowerCase()], Number(day), refDate);
+
+  const locations = [], rounds = [];
+  let total = null;
+  lines.forEach((line, i) => {
+    const m = line.match(MAIL_ROUND);
+    if (m) { locations[Number(m[1]) - 1] = m[2]; return; }
+    // "91" gevolgd door "your score" → score van de laatst geziene ronde.
+    if (/^your score$/i.test(line) && /^\d{1,3}$/.test(lines[i - 1] ?? '')) {
+      const n = locations.filter(Boolean).length;
+      if (n) rounds[n - 1] = Number(lines[i - 1]);
+    }
+    const t = line.match(/^(\d{1,4})\s+your score\b/i);
+    if (t) total = Number(t[1]);
+  });
+  if (locations.filter(Boolean).length !== 5) return [];
+  const hasRounds = rounds.filter((v) => v !== undefined).length === 5;
+  return [{ date, total: hasRounds ? total ?? weightedTotal(rounds) : null, locations, rounds: hasRounds ? rounds : null }];
+}
+
 /**
  * @param {string} text  gekopieerde chat
  * @param {{players: string[], me: string, refDate?: Date}} opts

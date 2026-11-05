@@ -1,4 +1,4 @@
-import { parseChat, parseExport, weightedTotal } from './parser.js';
+import { parseChat, parseExport, parseMail, weightedTotal } from './parser.js';
 import { ROUND_LABELS } from './stats.js';
 
 const $ = (sel) => document.querySelector(sel);
@@ -36,8 +36,9 @@ function setLocations(date, locs) {
 async function importExport() {
   const file = $('#export-file').files[0];
   const text = file ? await file.text() : $('#export-text').value;
-  const games = parseExport(text);
-  if (!games.length) { $('#export-status').textContent = '❌ Geen spellen gevonden in deze export.'; return; }
+  let games = parseExport(text);
+  if (!games.length) games = parseMail(text);
+  if (!games.length) { $('#export-status').textContent = '❌ Geen locaties gevonden. Plak de volledige MapTap-mail of de CSV-export.'; return; }
   let added = 0;
   const notes = [];
   for (const g of games) {
@@ -46,7 +47,7 @@ async function importExport() {
     if (before !== g.locations.join('|')) added++;
     // Eigen score aanvullen of controleren voor dagen die al op het scorebord staan.
     const day = findDay(g.date);
-    if (!day) continue;
+    if (!day || !g.rounds) continue;
     const mine = day.results.find((r) => r.player === data.me);
     if (!mine) { day.results.push({ player: data.me, rounds: g.rounds, total: g.total }); notes.push(`score van ${data.me} toegevoegd op ${g.date}`); }
     else if (mine.total !== g.total) notes.push(`let op: ${g.date} staat ${mine.total} op het scorebord maar ${g.total} in de export`);
