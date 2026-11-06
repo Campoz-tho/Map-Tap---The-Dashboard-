@@ -24,6 +24,13 @@
       "Burbank, California, USA",
       "Bacolod, Philippines",
       "Port Hedland, Western Australia, Australia"
+    ],
+    "2026-11-06": [
+      "Kinshasa, D.R. Congo",
+      "Kampala, Uganda",
+      "Barranquilla, Colombia",
+      "Springfield, Illinois, USA",
+      "Novosibirsk, Novosibirsk Oblast, Russia"
     ]
   },
   "days": [
@@ -197,6 +204,89 @@
           "text": "auwtch"
         }
       ]
+    },
+    {
+      "date": "2026-11-06",
+      "results": [
+        {
+          "player": "Tim",
+          "rounds": [
+            99,
+            86,
+            75,
+            81,
+            96
+          ],
+          "total": 866
+        },
+        {
+          "player": "Rembert",
+          "rounds": [
+            80,
+            87,
+            81,
+            83,
+            80
+          ],
+          "total": 818
+        },
+        {
+          "player": "Emile",
+          "rounds": [
+            83,
+            85,
+            74,
+            91,
+            72
+          ],
+          "total": 805
+        },
+        {
+          "player": "Guust",
+          "rounds": [
+            95,
+            90,
+            66,
+            98,
+            78
+          ],
+          "total": 845
+        },
+        {
+          "player": "Felix",
+          "rounds": [
+            78,
+            83,
+            93,
+            96,
+            78
+          ],
+          "total": 869
+        },
+        {
+          "player": "Frédéric",
+          "rounds": [
+            80,
+            95,
+            80,
+            95,
+            91
+          ],
+          "total": 893
+        },
+        {
+          "player": "Thomas",
+          "rounds": [
+            91,
+            88,
+            92,
+            84,
+            69
+          ],
+          "total": 822
+        }
+      ],
+      "chat": []
     }
   ]
 }
