@@ -135,7 +135,8 @@ function analyse() {
 function playerOptions(selected) {
   const names = [...data.players];
   if (selected && !names.includes(selected)) names.push(selected);
-  return `<option value="">— kies —</option>` + names.map((p) => `<option ${p === selected ? 'selected' : ''}>${esc(p)}</option>`).join('');
+  return `<option value="">— kies —</option>` + names.map((p) => `<option ${p === selected ? 'selected' : ''}>${esc(p)}</option>`).join('')
+    + '<option value="__new">➕ Nieuwe speler…</option>';
 }
 
 function renderPreview() {
@@ -177,7 +178,12 @@ function renderPreview() {
 
   el.querySelectorAll('.inc-r').forEach((c) => c.onchange = () => { groups[c.dataset.g].results[c.dataset.r].include = c.checked; });
   el.querySelectorAll('.inc-m').forEach((c) => c.onchange = () => { groups[c.dataset.g].messages[c.dataset.m].include = c.checked; });
-  el.querySelectorAll('.pl').forEach((s) => s.onchange = () => { groups[s.dataset.g].results[s.dataset.r].player = s.value; renderPreview(); });
+  el.querySelectorAll('.pl').forEach((s) => s.onchange = () => {
+    let name = s.value;
+    if (name === '__new') name = (prompt('Naam van de nieuwe speler:') ?? '').trim();
+    groups[s.dataset.g].results[s.dataset.r].player = name;
+    renderPreview();
+  });
   el.querySelectorAll('.loc').forEach((i) => i.oninput = () => { groups[i.dataset.g].locations[i.dataset.l] = i.value.trim(); });
   $('#save-all').onclick = saveGroups;
 }

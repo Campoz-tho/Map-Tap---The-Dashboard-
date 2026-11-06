@@ -279,7 +279,7 @@ async function main() {
   const res = await fetch(`data/scores.json?t=${Date.now()}`);
   data = await res.json();
   stats = computeStats(data);
-  colorOf = (p) => `var(--s${(data.players.indexOf(p) % 6) + 1})`;
+  colorOf = (p) => `var(--s${(data.players.indexOf(p) % 8) + 1})`;
   dayIndex = stats.days.length - 1;
   renderHeader(); renderKpis(); renderDay(); renderStandings(); renderTrend(); renderHeat(); renderLocations(); renderArchive();
   bindTabs('trend-tabs', (m) => { trendMode = m; renderTrend(); });
