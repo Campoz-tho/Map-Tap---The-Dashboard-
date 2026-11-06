@@ -6,7 +6,9 @@
     "Rembert",
     "Frédéric",
     "Felix",
-    "Wout"
+    "Wout",
+    "Emile",
+    "Tim"
   ],
   "locations": {
     "2026-11-04": [
@@ -163,6 +165,28 @@
             93,
             98,
             80
+          ],
+          "total": 914
+        },
+        {
+          "player": "Emile",
+          "rounds": [
+            96,
+            93,
+            95,
+            62,
+            52
+          ],
+          "total": 721
+        },
+        {
+          "player": "Tim",
+          "rounds": [
+            97,
+            95,
+            91,
+            98,
+            82
           ],
           "total": 914
         }
