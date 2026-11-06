@@ -189,3 +189,30 @@ td.player { font-weight: 600; }
   .pname .dot { display: none; }
   header.top h1 { font-size: 24px; }
 }
+
+/* Navigatie tussen pagina's */
+.top-actions { align-items: center; flex-wrap: wrap; }
+.tabs.nav { margin-bottom: 0; }
+.tabs.nav a { color: var(--text-2); text-decoration: none; padding: 5px 12px; border-radius: 7px; font-size: 14px; }
+.tabs.nav a:hover { color: var(--text); }
+.tabs.nav a[aria-current="page"] { background: var(--surface); box-shadow: var(--shadow); color: var(--text); font-weight: 600; }
+
+/* Kaart */
+.map { position: relative; }
+.map svg { display: block; width: 100%; height: auto; }
+.map .sea { fill: color-mix(in srgb, var(--accent) 6%, var(--surface)); stroke: var(--grid); }
+.map .cont { stroke: var(--surface); stroke-width: 1; stroke-linejoin: round; cursor: pointer; transition: opacity .12s; outline: none; }
+.map .cont.empty { stroke: var(--axis); }
+.map svg:hover .cont:not(.active), .map svg:has(.cont.active) .cont:not(.active) { opacity: .55; }
+.map .cont.active { stroke: var(--text); stroke-width: 1.5; }
+.map .tooltip { min-width: 180px; }
+.map .tooltip .dot { width: 8px; height: 8px; }
+.cont-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.cont-card h3 { margin: 0 0 10px; font-size: 16px; }
+.bars { display: grid; gap: 6px; }
+.bar-row { display: grid; grid-template-columns: minmax(90px, 130px) 1fr 40px; gap: 8px; align-items: center; font-size: 14px; }
+.bar-row .pname { font-weight: 500; }
+.bar-row.lead .pname { font-weight: 700; }
+.bar-row b { text-align: right; }
+.bar { height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 4px; }

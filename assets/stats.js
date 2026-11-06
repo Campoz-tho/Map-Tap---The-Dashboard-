@@ -1,4 +1,5 @@
 // Berekeningen bovenop data/scores.json.
+import { continentOf, CONTINENTS } from './geo.js';
 
 export const ROUND_LABELS = ['R1 ×1', 'R2 ×1', 'R3 ×2', 'R4 ×3', 'R5 ×3'];
 const MULT = [1, 1, 2, 3, 3];
@@ -90,5 +91,24 @@ export function computeStats(data) {
 
   const groupRoundAvg = [0, 1, 2, 3, 4].map((i) => avg(all.map((r) => r.rounds[i])));
 
-  return { days: dayInfo, table, highest, closest, biggest, locations, groupRoundAvg };
+  // Per continent: gemiddelde rondescore (op 100, zonder multipliers) per speler.
+  const continents = {};
+  for (const l of locations) {
+    const code = continentOf(l.name);
+    if (!code) continue;
+    const c = (continents[code] ??= { code, name: CONTINENTS[code], locations: [], scores: {} });
+    c.locations.push(l);
+    const day = dayInfo.find((d) => d.date === l.date);
+    for (const r of day.results) (c.scores[r.player] ??= []).push(r.rounds[l.round]);
+  }
+  for (const c of Object.values(continents)) {
+    c.ranking = Object.entries(c.scores)
+      .map(([player, xs]) => ({ player, avg: avg(xs), n: xs.length, sum: xs.reduce((a, b) => a + b, 0) }))
+      .sort((a, b) => b.avg - a.avg || b.n - a.n);
+    const best = c.ranking[0]?.avg;
+    c.leaders = c.ranking.filter((r) => r.avg === best).map((r) => r.player);
+    c.hardest = c.locations.reduce((m, l) => (!m || l.avg < m.avg ? l : m), null);
+  }
+
+  return { days: dayInfo, table, highest, closest, biggest, locations, groupRoundAvg, continents };
 }

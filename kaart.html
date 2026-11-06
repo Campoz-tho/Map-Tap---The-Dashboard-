@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MapTap Kaart</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div>
+        <h1>🌍 Wie kent welk continent?</h1>
+        <p>Elk continent krijgt de kleur van de speler met de hoogste gemiddelde score daar (per locatie, op 100, zonder multipliers).</p>
+      </div>
+      <div class="top-actions">
+        <nav class="tabs nav" aria-label="Pagina's">
+          <a href="index.html">📊 Scorebord</a>
+          <a href="kaart.html" aria-current="page">🌍 Kaart</a>
+        </nav>
+      </div>
+    </header>
+
+    <section>
+      <div class="card">
+        <div class="legend" id="map-legend"></div>
+        <div class="map" id="map"></div>
+        <div class="small muted" style="margin-top:8px">Ga met je muis over een continent (of tik erop) voor de stand.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Per continent</h2>
+      <div class="cont-grid" id="cont-list"></div>
+    </section>
+  </div>
+  <script type="module" src="assets/kaart.js"></script>
+</body>
+</html>
