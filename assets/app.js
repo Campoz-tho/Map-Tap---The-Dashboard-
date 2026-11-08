@@ -1,4 +1,6 @@
 import { computeStats, ROUND_LABELS } from './stats.js';
+import { loadData } from './load.js';
+import { FORM_URL } from './config.js';
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -6,7 +8,7 @@ const fmt = (n, d = 0) => (n === null || n === undefined ? '–' : n.toLocaleStr
 const longDate = (iso) => new Date(iso + 'T12:00').toLocaleDateString('nl-BE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 const shortDate = (iso) => new Date(iso + 'T12:00').toLocaleDateString('nl-BE', { day: 'numeric', month: 'short' });
 
-let data, stats, colorOf, dayIndex;
+let data, stats, colorOf, dayIndex, sheet;
 
 // Score (0-100) → stap op de blauwe ramp; donkere stappen krijgen witte tekst.
 function cellStyle(t) {
@@ -19,6 +21,12 @@ function renderHeader() {
   const n = stats.days.length;
   $('#subtitle').textContent = `${data.players.join(' · ')} — ${n} ${n === 1 ? 'dag' : 'dagen'} gespeeld`;
   if (['localhost', '127.0.0.1'].includes(location.hostname)) $('#admin-link').hidden = false;
+  if (FORM_URL) { $('#form-link').href = FORM_URL; $('#form-link').hidden = false; }
+  const notes = [];
+  if (sheet?.error) notes.push('De scores uit het formulier konden niet geladen worden. Probeer later opnieuw.');
+  for (const s of sheet?.skipped ?? []) notes.push(`Niet meegeteld uit het formulier: ${s}`);
+  $('#sheet-notes').innerHTML = notes.map((n) => `<div>⚠ ${esc(n)}</div>`).join('');
+  $('#sheet-notes').hidden = !notes.length;
 }
 
 function renderKpis() {
@@ -276,8 +284,7 @@ function bindTabs(id, set) {
 }
 
 async function main() {
-  const res = await fetch(`data/scores.json?t=${Date.now()}`);
-  data = await res.json();
+  ({ data, sheet } = await loadData());
   stats = computeStats(data);
   colorOf = (p) => `var(--s${(data.players.indexOf(p) % 8) + 1})`;
   dayIndex = stats.days.length - 1;

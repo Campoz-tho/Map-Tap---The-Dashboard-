@@ -216,3 +216,6 @@ td.player { font-weight: 600; }
 .bar-row b { text-align: right; }
 .bar { height: 8px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
 .bar i { display: block; height: 100%; border-radius: 4px; }
+.btn.primary-link { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.btn.primary-link:hover { filter: brightness(1.08); background: var(--accent); }
+.sheet-notes { margin-top: 8px; font-size: 13px; color: var(--text-2); background: color-mix(in srgb, var(--gold) 12%, transparent); border-radius: 8px; padding: 8px 12px; display: grid; gap: 2px; }

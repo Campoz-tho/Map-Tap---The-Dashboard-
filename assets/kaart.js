@@ -1,4 +1,5 @@
 import { computeStats } from './stats.js';
+import { loadData } from './load.js';
 import { CONTINENTS } from './geo.js';
 import { MAP } from './continents.js';
 
@@ -93,7 +94,7 @@ function renderList() {
 }
 
 async function main() {
-  data = await (await fetch(`data/scores.json?t=${Date.now()}`)).json();
+  ({ data } = await loadData());
   stats = computeStats(data);
   colorOf = (p) => `var(--s${(data.players.indexOf(p) % 8) + 1})`;
   renderLegend(); renderMap(); renderList();

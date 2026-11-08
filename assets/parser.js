@@ -65,6 +65,23 @@ function parseRounds(line) {
   return rounds.every((v) => v >= 0 && v <= 100) ? rounds : null;
 }
 
+// Eén gedeeld MapTap-resultaat (bv. uit het formulier):
+// "maptap.gg November 8 / 93🏆 88🔥 97🔥 75😐 90👑 / Final score: 862"
+export function parseShare(text, refDate = new Date()) {
+  const lines = String(text ?? '').replace(/[​-‍﻿]/g, '').replace(/ /g, ' ')
+    .split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  let date = null, rounds = null, final = null;
+  for (const line of lines) {
+    if (!date) { const d = parseHeader(line, refDate); if (d) { date = d; continue; } }
+    if (!rounds && !FINAL.test(line)) { const r = parseRounds(line); if (r) { rounds = r; continue; } }
+    const f = line.match(FINAL);
+    if (f && final === null) final = Number(f[1]);
+  }
+  if (!rounds) return null;
+  const total = weightedTotal(rounds);
+  return { date, rounds, total, final, ok: final === null || final === total };
+}
+
 function splitCsvLine(line) {
   const out = [];
   let cur = '', quoted = false;
