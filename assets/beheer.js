@@ -1,5 +1,5 @@
-import { parseChat, parseExport, parseMail, weightedTotal } from './parser.js';
-import { ROUND_LABELS } from './stats.js';
+import { parseChat, parseExport, parseMail, weightedTotal } from './parser.js?v=mw7rnaav';
+import { ROUND_LABELS } from './stats.js?v=mw7rnaav';
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
