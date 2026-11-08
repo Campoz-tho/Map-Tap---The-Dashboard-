@@ -73,6 +73,7 @@ export function computeStats(data) {
   // Records over alle dagen.
   const all = dayInfo.flatMap((d) => d.ranked.map((r) => ({ ...r, date: d.date })));
   const highest = all.reduce((m, r) => (!m || r.total > m.total ? r : m), null);
+  const lowest = all.reduce((m, r) => (!m || r.total < m.total ? r : m), null);
   const decided = dayInfo.filter((d) => d.ranked.length > 1 && d.winners.length === 1);
   const closest = decided.reduce((m, d) => (!m || d.margin < m.margin ? d : m), null);
   const biggest = decided.reduce((m, d) => (!m || d.margin > m.margin ? d : m), null);
@@ -110,5 +111,5 @@ export function computeStats(data) {
     c.hardest = c.locations.reduce((m, l) => (!m || l.avg < m.avg ? l : m), null);
   }
 
-  return { days: dayInfo, table, highest, closest, biggest, locations, groupRoundAvg, continents };
+  return { days: dayInfo, table, highest, lowest, closest, biggest, locations, groupRoundAvg, continents };
 }

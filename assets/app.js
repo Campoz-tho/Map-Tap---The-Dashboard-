@@ -29,6 +29,18 @@ function renderHeader() {
   $('#sheet-notes').hidden = !notes.length;
 }
 
+// Tijdelijk, voor de lol: de laagste score ooit, groot bovenaan.
+function renderShame() {
+  const l = stats.lowest;
+  if (!l) return;
+  const el = $('#shame');
+  el.hidden = false;
+  el.innerHTML = `
+    <div class="shame-label">🤡 Hall of Shame · laagste score ooit</div>
+    <div class="shame-value"><span class="shame-score">${fmt(l.total)}</span> <span class="shame-name">${esc(l.player)}</span></div>
+    <div class="shame-sub">${longDate(l.date)} · rondes ${l.rounds.join(' · ')}</div>`;
+}
+
 function renderKpis() {
   const leader = stats.table[0];
   const leaders = stats.table.filter((r) => r.wins === leader?.wins && r.wins > 0);
@@ -288,7 +300,7 @@ async function main() {
   stats = computeStats(data);
   colorOf = (p) => `var(--s${(data.players.indexOf(p) % 10) + 1})`;
   dayIndex = stats.days.length - 1;
-  renderHeader(); renderKpis(); renderDay(); renderStandings(); renderTrend(); renderHeat(); renderLocations(); renderArchive();
+  renderHeader(); renderShame(); renderKpis(); renderDay(); renderStandings(); renderTrend(); renderHeat(); renderLocations(); renderArchive();
   bindTabs('trend-tabs', (m) => { trendMode = m; renderTrend(); });
   bindTabs('heat-tabs', (m) => { heatMode = m; renderHeat(); });
   let w = innerWidth;

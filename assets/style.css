@@ -219,3 +219,12 @@ td.player { font-weight: 600; }
 .btn.primary-link { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
 .btn.primary-link:hover { filter: brightness(1.08); background: var(--accent); }
 .sheet-notes { margin-top: 8px; font-size: 13px; color: var(--text-2); background: color-mix(in srgb, var(--gold) 12%, transparent); border-radius: 8px; padding: 8px 12px; display: grid; gap: 2px; }
+
+/* Hall of Shame (tijdelijk) */
+.shame { margin-top: 20px; text-align: center; padding: 22px 16px; border: 2px dashed color-mix(in srgb, #d03b3b 55%, transparent); background: color-mix(in srgb, #d03b3b 8%, var(--surface)); }
+.shame-label { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #d03b3b; }
+.shame-value { margin-top: 6px; line-height: 1.1; display: flex; justify-content: center; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.shame-score { font-size: 56px; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.shame-name { font-size: 36px; font-weight: 700; }
+.shame-sub { margin-top: 6px; color: var(--text-2); font-size: 14px; }
+@media (max-width: 560px) { .shame-score { font-size: 44px; } .shame-name { font-size: 28px; } }
