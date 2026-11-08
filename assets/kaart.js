@@ -96,7 +96,7 @@ function renderList() {
 async function main() {
   ({ data } = await loadData());
   stats = computeStats(data);
-  colorOf = (p) => `var(--s${(data.players.indexOf(p) % 8) + 1})`;
+  colorOf = (p) => `var(--s${(data.players.indexOf(p) % 10) + 1})`;
   renderLegend(); renderMap(); renderList();
 }
 

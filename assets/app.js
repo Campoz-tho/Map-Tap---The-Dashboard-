@@ -286,7 +286,7 @@ function bindTabs(id, set) {
 async function main() {
   ({ data, sheet } = await loadData());
   stats = computeStats(data);
-  colorOf = (p) => `var(--s${(data.players.indexOf(p) % 8) + 1})`;
+  colorOf = (p) => `var(--s${(data.players.indexOf(p) % 10) + 1})`;
   dayIndex = stats.days.length - 1;
   renderHeader(); renderKpis(); renderDay(); renderStandings(); renderTrend(); renderHeat(); renderLocations(); renderArchive();
   bindTabs('trend-tabs', (m) => { trendMode = m; renderTrend(); });
