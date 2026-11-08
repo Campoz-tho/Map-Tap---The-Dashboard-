@@ -31,6 +31,13 @@
       "Barranquilla, Colombia",
       "Springfield, Illinois, USA",
       "Novosibirsk, Novosibirsk Oblast, Russia"
+    ],
+    "2026-11-07": [
+      "Warsaw, Poland",
+      "Hanover, Germany",
+      "Thimphu, Bhutan",
+      "Lansing, Michigan, USA",
+      "Mildura, Victoria, Australia"
     ]
   },
   "days": [
@@ -298,6 +305,102 @@
         }
       ],
       "chat": []
+    },
+    {
+      "date": "2026-11-07",
+      "results": [
+        {
+          "player": "Guust",
+          "rounds": [
+            100,
+            95,
+            51,
+            97,
+            88
+          ],
+          "total": 852
+        },
+        {
+          "player": "Rembert",
+          "rounds": [
+            100,
+            91,
+            89,
+            85,
+            90
+          ],
+          "total": 894
+        },
+        {
+          "player": "Thomas",
+          "rounds": [
+            97,
+            97,
+            81,
+            98,
+            93
+          ],
+          "total": 929
+        },
+        {
+          "player": "Tim",
+          "rounds": [
+            85,
+            96,
+            98,
+            89,
+            88
+          ],
+          "total": 908
+        },
+        {
+          "player": "Emile",
+          "rounds": [
+            98,
+            99,
+            94,
+            89,
+            86
+          ],
+          "total": 910
+        },
+        {
+          "player": "Frédéric",
+          "rounds": [
+            91,
+            97,
+            68,
+            95,
+            98
+          ],
+          "total": 903
+        },
+        {
+          "player": "Wout",
+          "rounds": [
+            94,
+            98,
+            94,
+            82,
+            85
+          ],
+          "total": 881
+        }
+      ],
+      "chat": [
+        {
+          "player": "Guust",
+          "text": "niet evident"
+        },
+        {
+          "player": "Rembert",
+          "text": "Zeker niet"
+        },
+        {
+          "player": "Tim",
+          "text": "Hmmm"
+        }
+      ]
     }
   ]
 }
