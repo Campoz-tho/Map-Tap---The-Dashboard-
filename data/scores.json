@@ -385,6 +385,17 @@
             85
           ],
           "total": 881
+        },
+        {
+          "player": "Felix",
+          "rounds": [
+            98,
+            99,
+            94,
+            89,
+            86
+          ],
+          "total": 910
         }
       ],
       "chat": [
@@ -399,6 +410,10 @@
         {
           "player": "Tim",
           "text": "Hmmm"
+        },
+        {
+          "player": "Felix",
+          "text": "🎯MapTap Daily Geography"
         }
       ]
     }
