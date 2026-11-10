@@ -1,7 +1,7 @@
-import { computeStats } from './stats.js?v=mw7rnaav';
-import { loadData } from './load.js?v=mw7rnaav';
-import { CONTINENTS } from './geo.js?v=mw7rnaav';
-import { MAP } from './continents.js?v=mw7rnaav';
+import { computeStats } from './stats.js?v=mwb3slnt';
+import { loadData } from './load.js?v=mwb3slnt';
+import { CONTINENTS } from './geo.js?v=mwb3slnt';
+import { MAP } from './continents.js?v=mwb3slnt';
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

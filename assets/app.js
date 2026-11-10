@@ -1,6 +1,6 @@
-import { computeStats, ROUND_LABELS } from './stats.js?v=mw7rnaav';
-import { loadData } from './load.js?v=mw7rnaav';
-import { FORM_URL } from './config.js?v=mw7rnaav';
+import { computeStats, ROUND_LABELS } from './stats.js?v=mwb3slnt';
+import { loadData } from './load.js?v=mwb3slnt';
+import { FORM_URL } from './config.js?v=mwb3slnt';
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -27,18 +27,6 @@ function renderHeader() {
   for (const s of sheet?.skipped ?? []) notes.push(`Niet meegeteld uit het formulier: ${s}`);
   $('#sheet-notes').innerHTML = notes.map((n) => `<div>⚠ ${esc(n)}</div>`).join('');
   $('#sheet-notes').hidden = !notes.length;
-}
-
-// Tijdelijk, voor de lol: de laagste score ooit, groot bovenaan.
-function renderShame() {
-  const l = stats.lowest;
-  if (!l) return;
-  const el = $('#shame');
-  el.hidden = false;
-  el.innerHTML = `
-    <div class="shame-label">🤡 Hall of Shame · laagste score ooit</div>
-    <div class="shame-value"><span class="shame-score">${fmt(l.total)}</span> <span class="shame-name">${esc(l.player)}</span></div>
-    <div class="shame-sub">${longDate(l.date)} · rondes ${l.rounds.join(' · ')}</div>`;
 }
 
 function renderKpis() {
@@ -300,7 +288,7 @@ async function main() {
   stats = computeStats(data);
   colorOf = (p) => `var(--s${(data.players.indexOf(p) % 10) + 1})`;
   dayIndex = stats.days.length - 1;
-  renderHeader(); renderShame(); renderKpis(); renderDay(); renderStandings(); renderTrend(); renderHeat(); renderLocations(); renderArchive();
+  renderHeader(); renderKpis(); renderDay(); renderStandings(); renderTrend(); renderHeat(); renderLocations(); renderArchive();
   bindTabs('trend-tabs', (m) => { trendMode = m; renderTrend(); });
   bindTabs('heat-tabs', (m) => { heatMode = m; renderHeat(); });
   let w = innerWidth;

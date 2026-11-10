@@ -1,5 +1,5 @@
 // Berekeningen bovenop data/scores.json.
-import { continentOf, CONTINENTS } from './geo.js?v=mw7rnaav';
+import { continentOf, CONTINENTS } from './geo.js?v=mwb3slnt';
 
 export const ROUND_LABELS = ['R1 ×1', 'R2 ×1', 'R3 ×2', 'R4 ×3', 'R5 ×3'];
 const MULT = [1, 1, 2, 3, 3];
