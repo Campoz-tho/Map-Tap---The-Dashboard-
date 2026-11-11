@@ -1,6 +1,6 @@
-import { computeStats, ROUND_LABELS } from './stats.js?v=mwb3slnt';
-import { loadData } from './load.js?v=mwb3slnt';
-import { FORM_URL } from './config.js?v=mwb3slnt';
+import { computeStats, ROUND_LABELS } from './stats.js?v=mwc4alkf';
+import { loadData } from './load.js?v=mwc4alkf';
+import { FORM_URL } from './config.js?v=mwc4alkf';
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

@@ -1,6 +1,6 @@
 // Laadt data/scores.json en voegt de scores uit het Google Formulier (gepubliceerde sheet) toe.
-import { SHEET_CSV_URL } from './config.js?v=mwb3slnt';
-import { parseShare, normalizeName } from './parser.js?v=mwb3slnt';
+import { SHEET_CSV_URL } from './config.js?v=mwc4alkf';
+import { parseShare, normalizeName } from './parser.js?v=mwc4alkf';
 
 // CSV met aanhalingstekens en meerdere regels binnen één veld.
 export function parseCsv(text) {
@@ -23,6 +23,12 @@ export function parseCsv(text) {
   return rows.filter((r) => r.some((c) => c.trim()));
 }
 
+// Tijdstempel van Google ("11/11/2026 11:46:40", dag/maand/jaar) → "2026-11-11".
+function stampDate(stamp) {
+  const m = String(stamp ?? '').match(/(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})/);
+  return m ? `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}` : null;
+}
+
 // Voegt formulier-rijen toe aan data. Scores die al in scores.json staan, blijven voorrang hebben.
 // Vult dezelfde speler een dag twee keer in, dan telt de laatste keer.
 export function mergeSheet(data, csvText, refDate = new Date()) {
@@ -42,7 +48,9 @@ export function mergeSheet(data, csvText, refDate = new Date()) {
     if (!rawName) continue;
     const player = known.get(normalizeName(rawName)) ?? rawName;
     const res = parseShare(r[cText], refDate);
-    if (!res) { report.skipped.push(`${player}: geen 5 rondescores gevonden`); continue; }
+    if (!res) { report.skipped.push(`${player} (${stampDate(r[0]) ?? '?'}): geen 5 rondescores gevonden. Plak het volledige MapTap-bericht, niet alleen de eindscore`); continue; }
+    // Datumregel vergeten mee te kopiëren? Dan telt de dag waarop het formulier werd ingevuld.
+    res.date ??= stampDate(r[0]);
     if (!res.date) { report.skipped.push(`${player}: geen datum ("maptap.gg November 8") gevonden`); continue; }
     if (!res.ok) { report.skipped.push(`${player} (${res.date}): eindscore ${res.final} klopt niet met de rondes (${res.total})`); continue; }
     const key = `${res.date}|${player}`;
