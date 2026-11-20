@@ -82,6 +82,28 @@ export function parseShare(text, refDate = new Date()) {
   return { date, rounds, total, final, ok: final === null || final === total };
 }
 
+// Gedeeld Gauntlet-resultaat:
+// "⚡ MapTap: The Gauntlet — 29 locations in 140s / 95🏆 95🏆 … / Score: 886 in 117.9s (22.1s to spare!)"
+export const isGauntlet = (text) => /gauntlet/i.test(String(text ?? ''));
+
+export function parseGauntlet(text) {
+  const t = String(text ?? '').replace(/\u00a0/g, ' ');
+  const score = t.match(/score:?\s*(\d{1,5})(?:\s*in\s*([\d.,]+)\s*s)?/i);
+  if (!score) return null;
+  const spare = t.match(/([\d.,]+)\s*s\s*to spare/i);
+  const head = t.match(/(\d{1,3})\s*locations?\s*in\s*(\d{1,4})\s*s/i);
+  const rounds = (t.match(/\b\d{1,3}(?=\s*\p{Extended_Pictographic})/gu) ?? []).map(Number).filter((v) => v <= 100);
+  const num = (s) => (s == null ? null : Number(s.replace(',', '.')));
+  return {
+    score: Number(score[1]),
+    time: num(score[2]),
+    spare: num(spare?.[1]),
+    limit: head ? Number(head[2]) : null,
+    locations: rounds.length || (head ? Number(head[1]) : null),
+    rounds,
+  };
+}
+
 function splitCsvLine(line) {
   const out = [];
   let cur = '', quoted = false;

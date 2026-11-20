@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const v = Date.now().toString(36);
-const files = ['index.html', 'kaart.html', 'beheer.html', ...readdirSync(join(root, 'assets')).filter((f) => f.endsWith('.js')).map((f) => `assets/${f}`)];
+const files = ['index.html', 'kaart.html', 'gauntlet.html', 'beheer.html', ...readdirSync(join(root, 'assets')).filter((f) => f.endsWith('.js')).map((f) => `assets/${f}`)];
 const RE = /((?:\.\/|assets\/)[\w-]+\.(?:js|css))(?:\?v=\w+)?(['"])/g;
 for (const f of files) {
   const p = join(root, f);

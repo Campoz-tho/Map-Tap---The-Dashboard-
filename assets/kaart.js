@@ -1,7 +1,7 @@
-import { computeStats, MIN_CONTINENT_LOCS } from './stats.js?v=mwov0h63';
-import { loadData } from './load.js?v=mwov0h63';
-import { CONTINENTS } from './geo.js?v=mwov0h63';
-import { MAP } from './continents.js?v=mwov0h63';
+import { computeStats, MIN_CONTINENT_LOCS } from './stats.js?v=mwp32fn5';
+import { loadData } from './load.js?v=mwp32fn5';
+import { CONTINENTS } from './geo.js?v=mwp32fn5';
+import { MAP } from './continents.js?v=mwp32fn5';
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

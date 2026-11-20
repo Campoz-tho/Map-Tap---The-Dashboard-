@@ -1,6 +1,6 @@
 // Laadt data/scores.json en voegt de scores uit het Google Formulier (gepubliceerde sheet) toe.
-import { SHEET_CSV_URL } from './config.js?v=mwov0h63';
-import { parseShare, normalizeName } from './parser.js?v=mwov0h63';
+import { SHEET_CSV_URL } from './config.js?v=mwp32fn5';
+import { parseShare, normalizeName, isGauntlet, parseGauntlet } from './parser.js?v=mwp32fn5';
 
 // CSV met aanhalingstekens en meerdere regels binnen één veld.
 export function parseCsv(text) {
@@ -43,10 +43,18 @@ export function mergeSheet(data, csvText, refDate = new Date()) {
 
   const known = new Map(data.players.map((p) => [normalizeName(p), p]));
   const fromSheet = new Map(); // "datum|speler" → resultaat
+  const gauntlet = new Map(); // "datum|speler" → gauntlet-resultaat (laatste telt)
   for (const r of rows.slice(1)) {
     const rawName = (r[cName] ?? '').trim();
     if (!rawName) continue;
     const player = known.get(normalizeName(rawName)) ?? rawName;
+    if (isGauntlet(r[cText])) {
+      const g = parseGauntlet(r[cText]);
+      const date = stampDate(r[0]);
+      if (!g || !date) { report.skipped.push(`${player} (${date ?? '?'}): Gauntlet-resultaat niet herkend. Plak het volledige bericht met "Score: … in …s"`); continue; }
+      gauntlet.set(`${date}|${player}`, { date, player, ...g });
+      continue;
+    }
     const res = parseShare(r[cText], refDate);
     if (!res) { report.skipped.push(`${player} (${stampDate(r[0]) ?? '?'}): geen 5 rondescores gevonden. Plak het volledige MapTap-bericht, niet alleen de eindscore`); continue; }
     // Datumregel vergeten mee te kopiëren? Dan telt de dag waarop het formulier werd ingevuld.
@@ -70,12 +78,15 @@ export function mergeSheet(data, csvText, refDate = new Date()) {
     report.added++;
   }
   data.days.sort((a, b) => a.date.localeCompare(b.date));
+  data.gauntlet = [...(data.gauntlet ?? []), ...gauntlet.values()];
+  for (const g of gauntlet.values()) if (!data.players.includes(g.player)) data.players.push(g.player);
   return report;
 }
 
 export async function loadData() {
   const data = await (await fetch(`data/scores.json?t=${Date.now()}`)).json();
   data.locations ??= {};
+  data.gauntlet ??= [];
   let sheet = null;
   if (SHEET_CSV_URL) {
     try {

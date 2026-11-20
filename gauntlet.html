@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MapTap Gauntlet</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="stylesheet" href="assets/style.css?v=mwp32fn5">
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div>
+        <h1>⚡ The Gauntlet</h1>
+        <p>Zijcompetitie: zoveel mogelijk locaties tegen de klok. De hoogste score wint de dag.</p>
+      </div>
+      <div class="top-actions">
+        <nav class="tabs nav" aria-label="Pagina's">
+          <a href="index.html">📊 Scorebord</a>
+          <a href="kaart.html">🌍 Kaart</a>
+          <a href="gauntlet.html" aria-current="page">⚡ Gauntlet</a>
+        </nav>
+        <a class="btn primary-link" href="https://docs.google.com/forms/d/e/1FAIpQLSeYSUEAxbxAwryLA-4SiXtxM5MdXwAJ_mon7DEaT60UFioa7w/viewform" target="_blank" rel="noopener">✍️ Score invullen</a>
+      </div>
+    </header>
+
+    <section>
+      <h2>Klassement</h2>
+      <div class="card table-wrap" id="g-standings"></div>
+    </section>
+
+    <section>
+      <h2>Dagresultaat</h2>
+      <div class="card" id="g-day"></div>
+    </section>
+
+    <p class="small muted">Invullen via hetzelfde formulier: plak gewoon je volledige Gauntlet-resultaat ("⚡ MapTap: The Gauntlet …"). De datum is de dag waarop je het formulier invult.</p>
+  </div>
+  <script type="module" src="assets/gauntlet.js?v=mwp32fn5"></script>
+</body>
+</html>
