@@ -1,8 +1,11 @@
 // Berekeningen bovenop data/scores.json.
-import { continentOf, CONTINENTS } from './geo.js?v=mwc4alkf';
+import { continentOf, CONTINENTS } from './geo.js?v=mwov0h63';
 
 export const ROUND_LABELS = ['R1 ×1', 'R2 ×1', 'R3 ×2', 'R4 ×3', 'R5 ×3'];
 const MULT = [1, 1, 2, 3, 3];
+
+// Minimum aantal gespeelde locaties in een continent voor je daar leider kan zijn.
+export const MIN_CONTINENT_LOCS = 5;
 
 const avg = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
 
@@ -104,10 +107,11 @@ export function computeStats(data) {
   }
   for (const c of Object.values(continents)) {
     c.ranking = Object.entries(c.scores)
-      .map(([player, xs]) => ({ player, avg: avg(xs), n: xs.length, sum: xs.reduce((a, b) => a + b, 0) }))
-      .sort((a, b) => b.avg - a.avg || b.n - a.n);
-    const best = c.ranking[0]?.avg;
-    c.leaders = c.ranking.filter((r) => r.avg === best).map((r) => r.player);
+      .map(([player, xs]) => ({ player, avg: avg(xs), n: xs.length, sum: xs.reduce((a, b) => a + b, 0), qualified: xs.length >= MIN_CONTINENT_LOCS }))
+      .sort((a, b) => b.qualified - a.qualified || b.avg - a.avg || b.n - a.n);
+    // Leider kan je pas worden vanaf MIN_CONTINENT_LOCS gespeelde locaties in dat continent.
+    const best = c.ranking.find((r) => r.qualified)?.avg;
+    c.leaders = c.ranking.filter((r) => r.qualified && r.avg === best).map((r) => r.player);
     c.hardest = c.locations.reduce((m, l) => (!m || l.avg < m.avg ? l : m), null);
   }
 

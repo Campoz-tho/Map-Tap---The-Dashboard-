@@ -1,12 +1,12 @@
-import { computeStats } from './stats.js?v=mwc4alkf';
-import { loadData } from './load.js?v=mwc4alkf';
-import { CONTINENTS } from './geo.js?v=mwc4alkf';
-import { MAP } from './continents.js?v=mwc4alkf';
+import { computeStats, MIN_CONTINENT_LOCS } from './stats.js?v=mwov0h63';
+import { loadData } from './load.js?v=mwov0h63';
+import { CONTINENTS } from './geo.js?v=mwov0h63';
+import { MAP } from './continents.js?v=mwov0h63';
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = (n) => (n == null ? '–' : n.toLocaleString('nl-BE', { maximumFractionDigits: 1, minimumFractionDigits: 1 }));
-const partial = (r, c) => (r.n < c.locations.length ? ` <span class="muted small" title="${r.n} van de ${c.locations.length} locaties gespeeld">(${r.n}/${c.locations.length})</span>` : '');
+const partial = (r) => (r.qualified ? '' : ` <span class="muted small" title="Telt pas mee vanaf ${MIN_CONTINENT_LOCS} locaties in dit continent">(${r.n}/${MIN_CONTINENT_LOCS})</span>`);
 const ORDER = ['EU', 'AS', 'AF', 'NA', 'SA', 'OC'];
 
 let data, stats, colorOf;
@@ -31,7 +31,8 @@ function tipHtml(code) {
   if (!c) return `<div class="t">${CONTINENTS[code]}</div><div class="muted">Nog geen locaties gespeeld</div>`;
   const n = c.locations.length;
   return `<div class="t">${esc(c.name)} <span class="muted" style="font-weight:400">· ${n} ${n === 1 ? 'locatie' : 'locaties'}</span></div>
-    ${c.ranking.map((r) => `<div class="r"><span><i class="dot" style="background:${colorOf(r.player)}"></i>${c.leaders.includes(r.player) ? '👑 ' : ''}${esc(r.player)}${partial(r, c)}</span><b>${fmt(r.avg)}</b></div>`).join('')}
+    ${c.ranking.map((r) => `<div class="r${r.qualified ? '' : ' unq'}"><span><i class="dot" style="background:${colorOf(r.player)}"></i>${c.leaders.includes(r.player) ? '👑 ' : ''}${esc(r.player)}${partial(r)}</span><b>${fmt(r.avg)}</b></div>`).join('')}
+    ${c.leaders.length ? '' : `<div class="muted small" style="margin-top:6px">Nog niemand heeft hier ${MIN_CONTINENT_LOCS} locaties gespeeld</div>`}
     ${c.hardest ? `<div class="muted small" style="margin-top:6px">Lastigste: ${esc(c.hardest.name)} (${fmt(c.hardest.avg)})</div>` : ''}`;
 }
 
@@ -72,7 +73,7 @@ function renderMap() {
 
 function renderLegend() {
   $('#map-legend').innerHTML = data.players.map((p) => `<span><i style="background:${colorOf(p)};height:10px;width:10px;border-radius:50%"></i>${esc(p)}</span>`).join('')
-    + '<span><i style="background:var(--surface-2);height:10px;width:10px;border-radius:2px;border:1px solid var(--axis)"></i>Nog niet gespeeld</span>';
+    + '<span><i style="background:var(--surface-2);height:10px;width:10px;border-radius:2px;border:1px solid var(--axis)"></i>Nog geen leider</span>';
 }
 
 function renderList() {
@@ -83,8 +84,8 @@ function renderList() {
     return `<div class="card cont-card">
       <h3>${esc(c.name)} <span class="muted small">· ${c.locations.length} ${c.locations.length === 1 ? 'locatie' : 'locaties'}</span></h3>
       <div class="bars">${c.ranking.map((r) => `
-        <div class="bar-row${c.leaders.includes(r.player) ? ' lead' : ''}">
-          <span class="pname"><i class="dot" style="background:${colorOf(r.player)}"></i><span>${c.leaders.includes(r.player) ? '👑 ' : ''}${esc(r.player)}${partial(r, c)}</span></span>
+        <div class="bar-row${c.leaders.includes(r.player) ? ' lead' : ''}${r.qualified ? '' : ' unq'}">
+          <span class="pname"><i class="dot" style="background:${colorOf(r.player)}"></i><span>${c.leaders.includes(r.player) ? '👑 ' : ''}${esc(r.player)}${partial(r)}</span></span>
           <span class="bar"><i style="width:${(r.avg / max) * 100}%;background:${colorOf(r.player)}"></i></span>
           <b class="num">${fmt(r.avg)}</b>
         </div>`).join('')}</div>

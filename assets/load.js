@@ -1,6 +1,6 @@
 // Laadt data/scores.json en voegt de scores uit het Google Formulier (gepubliceerde sheet) toe.
-import { SHEET_CSV_URL } from './config.js?v=mwc4alkf';
-import { parseShare, normalizeName } from './parser.js?v=mwc4alkf';
+import { SHEET_CSV_URL } from './config.js?v=mwov0h63';
+import { parseShare, normalizeName } from './parser.js?v=mwov0h63';
 
 // CSV met aanhalingstekens en meerdere regels binnen één veld.
 export function parseCsv(text) {
