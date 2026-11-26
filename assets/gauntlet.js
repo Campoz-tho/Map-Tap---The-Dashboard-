@@ -1,4 +1,4 @@
-import { loadData } from './load.js?v=mwp32fn5';
+import { loadData } from './load.js?v=mwxf0195';
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

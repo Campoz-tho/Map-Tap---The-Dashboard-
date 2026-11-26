@@ -1,7 +1,7 @@
-import { computeStats, MIN_CONTINENT_LOCS } from './stats.js?v=mwp32fn5';
-import { loadData } from './load.js?v=mwp32fn5';
-import { CONTINENTS } from './geo.js?v=mwp32fn5';
-import { MAP } from './continents.js?v=mwp32fn5';
+import { computeStats, MIN_CONTINENT_LOCS } from './stats.js?v=mwxf0195';
+import { loadData } from './load.js?v=mwxf0195';
+import { CONTINENTS } from './geo.js?v=mwxf0195';
+import { MAP } from './continents.js?v=mwxf0195';
 
 const $ = (sel) => document.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -11,9 +11,22 @@ const ORDER = ['EU', 'AS', 'AF', 'NA', 'SA', 'OC'];
 
 let data, stats, colorOf;
 
+// Inside joke: Daan zijn continenten krijgen een rode vlag met hamer en sikkel.
+const FLAG_PLAYER = 'Daan';
+const FLAG_RED = '#da251d';
+const flagDef = `<pattern id="flag" width="46" height="46" patternUnits="userSpaceOnUse" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="${FLAG_RED}"/>
+  <g fill="none" stroke="#ffde00" stroke-linecap="round">
+    <path d="M62.3 19.8 A30 30 0 1 1 23.8 58.3" stroke-width="9"/>
+    <path d="M29 67 L17 80" stroke-width="10"/>
+    <path d="M42 42 L74 74" stroke-width="9"/>
+  </g>
+  <rect x="-15" y="-6.5" width="30" height="13" fill="#ffde00" transform="translate(37 37) rotate(-45)"/>
+</pattern>`;
+
 function fillFor(c) {
   if (!c?.leaders.length) return 'var(--surface-2)';
-  if (c.leaders.length === 1) return colorOf(c.leaders[0]);
+  if (c.leaders.length === 1) return c.leaders[0] === FLAG_PLAYER ? 'url(#flag)' : colorOf(c.leaders[0]);
   return `url(#tie-${c.code})`;
 }
 
@@ -40,7 +53,7 @@ function renderMap() {
   const el = $('#map');
   el.innerHTML = `
     <svg viewBox="0 0 ${MAP.width} ${MAP.height}" role="img" aria-label="Wereldkaart met de leider per continent">
-      <defs>${tieDefs()}</defs>
+      <defs>${flagDef}${tieDefs()}</defs>
       <path d="${MAP.sphere}" class="sea"/>
       ${ORDER.map((code) => `<path d="${MAP.paths[code]}" class="cont${stats.continents[code] ? '' : ' empty'}" data-code="${code}" fill="${fillFor(stats.continents[code])}" tabindex="0"><title>${CONTINENTS[code]}</title></path>`).join('')}
     </svg>
@@ -97,7 +110,7 @@ function renderList() {
 async function main() {
   ({ data } = await loadData());
   stats = computeStats(data);
-  colorOf = (p) => `var(--s${(data.players.indexOf(p) % 10) + 1})`;
+  colorOf = (p) => (p === FLAG_PLAYER ? FLAG_RED : `var(--s${(data.players.indexOf(p) % 10) + 1})`);
   renderLegend(); renderMap(); renderList();
 }
 
